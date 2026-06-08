@@ -3,7 +3,7 @@
 **Contribution Number:** [1]  
 **Student:** [Krishna Sai Sevilimedu Veeravalli]  
 **Issue:** [https://github.com/documentdb/functional-tests/issues/202]
-**Status:** [Phase I]
+**Status:** [Phase I Complete]
 
 ---
 
