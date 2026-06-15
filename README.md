@@ -51,7 +51,49 @@ I chose this issue beacaise it is a well-scoped, test‑driven bug. The $bitAnd 
 - **Commit showing reproduction:** [Link to commit in your fork]
 - **Screenshots/logs:** [If applicable]
 - **My findings:** [What you discovered during reproduction]
+Environment Setup:
+git clone https://github.com/documentdb/functional-tests.git
+cd functional-tests
+python -m venv .venv
+pip install -r requirements.txt
 
+export CONNECTION_STRING="mongodb://localhost:27017"
+
+pytest -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb
+
+Steps to Reproduce:
+
+pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py 
+
+Test Error observed in Terminal:
+======================================= test session starts ========================================
+platform darwin -- Python 3.14.4, pytest-9.1.0, pluggy-1.6.0 -- /Users/kv/Desktop/Workspace/Codepath/functional-tests/.venv/bin/python3.14
+cachedir: .pytest_cache
+metadata: {'Python': '3.14.4', 'Platform': 'macOS-26.4.1-arm64-arm-64bit-Mach-O', 'Packages': {'pytest': '9.1.0', 'pluggy': '1.6.0'}, 'Plugins': {'xdist': '3.8.0', 'json-report': '1.5.0', 'timeout': '2.4.0', 'metadata': '3.1.1'}}
+rootdir: /Users/kv/Desktop/Workspace/Codepath/functional-tests/documentdb_tests
+configfile: pytest.ini
+plugins: xdist-3.8.0, json-report-1.5.0, timeout-2.4.0, metadata-3.1.1
+timeout: 300.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item                                                                                   
+
+documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py::test_smoke_expression_bitAnd FAILED [100%]
+
+============================================= FAILURES =============================================
+___________________________________ test_smoke_expression_bitAnd ___________________________________
+documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py:29: in test_smoke_expression_bitAnd
+    assertSuccess(result, expected, msg="Should support $bitAnd expression")
+documentdb_tests/framework/assertions.py:145: in assertSuccess
+    raise AssertionError(_format_exception_error(result))
+E   AssertionError: [UNEXPECTED_ERROR] Expected success but got exception:
+E   {'code': 31325, 'msg': 'Invalid $project :: caused by :: Unknown expression $bitAnd'}
+===================================== short test summary info ======================================
+FAILED documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py::test_smoke_expression_bitAnd - AssertionError: [UNEXPECTED_ERROR] Expected success but got exception:
+{'code': 31325, 'msg': 'Invalid $project :: caused by :: Unknown expression $bitAnd'}
+======================================== 1 failed in 0.30s =========================================
+Branch Link:
+https://github.com/krishnasai453/functional-tests/tree/fix-issue-202-add_bitAnd_compatibility_test
 ---
 
 ## Solution Approach
@@ -97,7 +139,19 @@ https://github.com/krishnasai453/functional-tests/tree/fix-issue-202-add_bitAnd_
 
 **Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
 
+ Follow the CONTRIBUTING.md:
+  - Run pre‑commit hooks (black, isort, flake8, mypy).
+  - Ensure docstrings and clear test names.
+  - Use required tags (@pytest.mark.smoke, @pytest.mark.bitwise).
+• Commit message style: present tense, concise, reference the issue (Fix #202: Add $bitAnd compatibility tests).
+• Pull‑request template expects a description of what, why, and how to test – fill those in.
+
 **Evaluate:** [How will you verify it works?]
+
+Automated verification will be the same as any other functional test:
+  - pytest -m bitwise should pass on both DocumentDB and MongoDB engines.
+  - The CI pipeline will run the same command; no failures mean the fix works.
+  - Optionally, check coverage reports to see that $bitAnd lines are now exercised.
 
 ---
 
