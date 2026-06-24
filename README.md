@@ -176,6 +176,20 @@ Automated verification will be the same as any other functional test:
 
 ## Implementation Notes
 
+
+Add or update the following sections in your Contribution README:
+
+Implementation Progress:
+- Added basic test cases for bitAnd operator
+- Added a file for test strategy
+Challenges Faced:
+- Challenges is going through codebase to make appropriate changes
+Testing Strategy:
+- Running existing smoke tests for bitAnd gave some idea on Testing Strategy
+Branch Link:
+https://github.com/krishnasai453/functional-tests/tree/fix-issue-202-add_bitAnd_compatibility_test
+
+
 ### Week [X] Progress
 
 [What you built this week, challenges faced, decisions made]
