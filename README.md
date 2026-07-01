@@ -209,15 +209,31 @@ https://github.com/krishnasai453/functional-tests/tree/fix-issue-202-add_bitAnd_
 ## Pull Request
 
 **PR Link:** [GitHub PR URL when submitted]
+https://github.com/documentdb/functional-tests/pull/662
 
 **PR Description:** [Draft or final PR description - much of the content above can be adapted]
+
+This PR resolves failing compatibility tests for the $bitAnd operator in test_expression_bitAnd_additional.py.
+
+Why this is needed
+Under MongoDB and DocumentDB specifications, the $bitAnd aggregation operator only supports int and long operands. Passing an array expression (such as [["$a", "$b"], 3]) or an object expression (such as [{"x": "$a", "y": "$b"}, 0]) evaluates to array/object structures, which are non-numeric types. These operations should fail with a type mismatch rather than succeed.
+
+What changed
+Updated ARRAY_EXPRESSION_TESTS and OBJECT_EXPRESSION_TESTS in test_expression_bitAnd_additional.py to expect TYPE_MISMATCH_ERROR (code 14) instead of assuming successful evaluation.
+Forwarded the error_code parameter to assert_expression_result in test_bitAnd_expression_additional.
+Removed the untracked template file test_expression_bitAnd_testing_strategy.txt.
+How to test
+Run the bitwise operator tests locally:
+
+pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd.py 
+pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd_additional.py
 
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
 **Status:** [Awaiting review / Iterating / Approved / Merged]
-
+Awaiting review
 ---
 
 ## Learnings & Reflections
