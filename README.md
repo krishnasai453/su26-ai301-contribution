@@ -228,6 +228,11 @@ Run the bitwise operator tests locally:
 pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd.py 
 pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd_additional.py
 
+### Week 5 Progress
+
+I pushed the changes and created PR but the pipeline in issue PR is failing(https://github.com/documentdb/functional-tests/pull/662)
+I am still figuring out how to fix the pipeline. This is my progress for Week 5
+
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
