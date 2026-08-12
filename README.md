@@ -51,21 +51,43 @@ I chose this issue beacaise it is a well-scoped, test‑driven bug. The $bitAnd 
 - **Commit showing reproduction:** [Link to commit in your fork]
 - **Screenshots/logs:** [If applicable]
 - **My findings:** [What you discovered during reproduction]
-Environment Setup:
+
+## Environment Setup:
+
 git clone https://github.com/documentdb/functional-tests.git
+
 cd functional-tests
+
 python -m venv .venv
+
 pip install -r requirements.txt
 
 export CONNECTION_STRING="mongodb://localhost:27017"
 
-pytest -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb
+pytest documentdb_tests/ -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb
 
-Steps to Reproduce:
+## Steps to Reproduce:
+Step 1:
+`git clone https://github.com/documentdb/functional-tests.git`
 
-pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py 
+Step 2:
+`cd functional-tests`
 
-Test Error observed in Terminal:
+Step 3:
+`python -m venv .venv`
+
+Step 4:
+`pip install -r requirements.txt`
+
+Step 5:
+`export CONNECTION_STRING="mongodb://localhost:27017"`
+
+Step 6:
+`pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py`
+
+# Test Error observed in Terminal after running Step 6:
+
+```
 ======================================= test session starts ========================================
 platform darwin -- Python 3.14.4, pytest-9.1.0, pluggy-1.6.0 -- /Users/kv/Desktop/Workspace/Codepath/functional-tests/.venv/bin/python3.14
 cachedir: .pytest_cache
@@ -80,6 +102,7 @@ collected 1 item
 
 documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py::test_smoke_expression_bitAnd FAILED [100%]
 
+
 ============================================= FAILURES =============================================
 ___________________________________ test_smoke_expression_bitAnd ___________________________________
 documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py:29: in test_smoke_expression_bitAnd
@@ -92,8 +115,51 @@ E   {'code': 31325, 'msg': 'Invalid $project :: caused by :: Unknown expression 
 FAILED documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_smoke_expression_bitAnd.py::test_smoke_expression_bitAnd - AssertionError: [UNEXPECTED_ERROR] Expected success but got exception:
 {'code': 31325, 'msg': 'Invalid $project :: caused by :: Unknown expression $bitAnd'}
 ======================================== 1 failed in 0.30s =========================================
+```
+
+# Expected Output in Step 6
+
+Test should pass wirh 1 test passed output
+
+
 Branch Link:
 https://github.com/krishnasai453/functional-tests/tree/fix-issue-202-add_bitAnd_compatibility_test
+
+
+### Challenges Faced
+Here are the setup challenges encountered when setting up the development/test environment for this repository, along with how to resolve them:
+
+1. Docker Port Conflicts
+Challenge: Attempting to bring up targets (like mongo-standalone on 27017 or mongo-replset on 27018) fails with port is already allocated or bind: address already in use because a local instance of MongoDB/DocumentDB or another Docker container is already using those ports.
+Resolution:
+Find the process using the port: lsof -i :27017 or lsof -i :27018 and stop it.
+Or, tear down any conflicting Docker containers running in the background: docker compose -f dev/compose.yaml down or docker system prune (with caution).
+2. Missing or Wrong Python/pip Version
+Challenge: Python version mismatch or global installation of dependencies failing with permissions or environment isolation errors.
+Resolution: Setup and use a Python virtual environment to isolate the package dependencies:
+bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+3. Thebelow step gave me an error.
+
+`pytest -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb`
+
+Error output:
+
+(.venv) kv@ functional-tests % pytest -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb
+ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+pytest: error: unrecognized arguments: --connection-string --engine-name
+  inifile: /Users/kv/Desktop/Workspace/Codepath/AI301-P1/functional-tests/pyproject.toml
+  rootdir: /Users/kv/Desktop/Workspace/Codepath/AI301-P1/functional-tests
+
+Error Screenshot:
+![alt text](image.png)
+
+Resolution:
+Use this command instead
+`python3 -m pytest -m bitwise --connection-string $CONNECTION_STRING --engine-name documentdb`
 ---
 
 ## Solution Approach
