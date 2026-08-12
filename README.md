@@ -312,15 +312,70 @@ Awaiting review
 
 ### Technical Skills Gained
 
-[What you learned technically]
+- **Pytest Configuration & Hook System**: Gained deep understanding of how pytest leverages `conftest.py` files to dynamically register CLI parameters and markers. Learned how pytest locates configuration files and why specifying the exact test suite directory is crucial when invoking custom tests using dynamically registered arguments (to avoid unrecognized argument errors).
+- **Git Branch Reconciliation & Force Pushing**: Learned how to handle git divergence errors resulting from local rebasing with `--signoff`. Gained practical skills in reconciling remote/local branches using `git reset --hard` and `git push --force-with-lease` to maintain a clean git history for PR checks.
+- **Specification Validation**: Learned MongoDB/DocumentDB type behavior specifications (such as `$bitAnd` expecting strictly numeric types), and how array/object evaluations resolve to type mismatches instead of returning valid results.
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+- **Resolving Pytest Argument Parsing Failures**: Solved the issue where pytest failed with unrecognized arguments `--connection-string` and `--engine-name` by running pytest with the explicit target folder (`pytest documentdb_tests/ ...`) or running through `python3 -m pytest ...`, ensuring `conftest.py` is parsed early.
+- **Diverged Git History with PR pipeline**: Resolved divergent branches caused by modifying commit histories with `--signoff` through resetting the branch to the remote state and cleanly rebasing only the target commits before force pushing.
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+- **Verify PR Checks/Pipelines Early**: Next time, I would verify the DCO (Developer Certificate of Origin) or signoff checks immediately upon creating the PR rather than waiting to resolve them at the end.
+- **Run Tests against Both Target Engines**: I would ensure the tests are consistently verified against both DocumentDB and MongoDB targets early in the cycle to isolate specification differences.
+
+---
+
+## Phase 4 deliverables
+
+## Deliverable 1:
+PR description references the issue with `Closes #XXXXX` (or project's equivalent close keyword):
+
+Please note that I am not able to make changes to my PR descripton on the issue anymore. The moderator has diabled all comments and editing on the PR, title and description.
+However I mentioned the issue number in the PR title.
+#### Title:
+Fix Issue #202: Add $bitAnd operator expression compatibility tests
+#### Description
+This PR resolves failing compatibility tests for the `$bitAnd` operator in `test_expression_bitAnd_additional.py`.
+Link: https://github.com/documentdb/functional-tests/pull/662
+
+I am not able to make any changes to the PR Title, description now or even add comments. Please take this into consideration for my grading.
+
+#### What I would've done if I could edit the PR description:
+- I would've added explicitely in the PR description mentioning that this PR closes issue #202.
+
+## Deliverable 2:
+Acceptance criteria checklist is filled in (tests added, all tests passing, follows style guide, no breaking changes).
+
+Since this is a new test addition and not a bug or issue in existing code, Acceptance Criteria is to verify if new test is added.
+I already added following in my PR description which pretty much mentiones the acceptance criteria, why it was needed, what changed and how to test it
+
+#### Why this is needed
+Under MongoDB and DocumentDB specifications, the `$bitAnd` aggregation operator only supports `int` and `long` operands. Passing an array expression (such as `[["$a", "$b"], 3]`) or an object expression (such as `[{"x": "$a", "y": "$b"}, 0]`) evaluates to array/object structures, which are non-numeric types. These operations should fail with a type mismatch rather than succeed.
+#### What changed
+- Updated `ARRAY_EXPRESSION_TESTS` and `OBJECT_EXPRESSION_TESTS` in `test_expression_bitAnd_additional.py` to expect `TYPE_MISMATCH_ERROR` (code `14`) instead of assuming successful evaluation.
+- Forwarded the `error_code` parameter to `assert_expression_result` in `test_bitAnd_expression_additional`.
+- Removed the untracked template file `test_expression_bitAnd_testing_strategy.txt`.
+#### How to test
+Run the bitwise operator tests locally:
+```bash
+
+pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd.py
+pytest documentdb_tests/compatibility/tests/core/operator/expressions/bitwise/bitAnd/test_expression_bitAnd_additional.py
+```
+I am not able to make any changes to the PR description now or even add comments. Please take this into consideration for my grading.
+
+## Deliverable 3:
+Reviewer was @mentioned, assigned, or PR was visibly surfaced to maintainers (e.g., posted in project Discussions)
+
+I did not mention reviewer or moderator in the PR description and neither did I tag any reviewer or moderator. I did not assign the PR to anyone.
+
+I am not able to mention/tag or do any changes to the PR now. Please take this into consideration for my grading.
+
+ #### What I would've done if I do or edit changes:
+    I would've tagged a reviewer or moderator, assigned the PR to a reviewer or moderator
 
 ---
 
