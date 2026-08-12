@@ -33,6 +33,7 @@ I chose this issue beacaise it is a well-scoped, test‑driven bug. The $bitAnd 
 [Which parts of the codebase are involved?]
 
 ---
+## Phase 2: Fix
 
 ## Reproduction Process
 
